@@ -7,8 +7,6 @@ public class XmlSerializerStrategy : IStorageSerializer
 {
     private static readonly Dictionary<Type, XmlSerializer> _serializerCache = [];
 
-    public string SupportedExtension => ".xml";
-
     public byte[] Serialize<T>(T data) where T : class
     {
         using var ms = new MemoryStream();
