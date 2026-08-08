@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cache", "Cache\Cache.csproj", "{57535009-3740-49C9-8490-8FACB814448B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{317D98C0-D024-43A6-ADC6-A2D9404F3F1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{57535009-3740-49C9-8490-8FACB814448B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57535009-3740-49C9-8490-8FACB814448B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57535009-3740-49C9-8490-8FACB814448B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{317D98C0-D024-43A6-ADC6-A2D9404F3F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{317D98C0-D024-43A6-ADC6-A2D9404F3F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{317D98C0-D024-43A6-ADC6-A2D9404F3F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{317D98C0-D024-43A6-ADC6-A2D9404F3F1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
