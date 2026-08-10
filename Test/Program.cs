@@ -10,6 +10,8 @@ class Program
         var config = TestConfig.CreateDefault();
 
         var runner = new TestRunner(config)
+            .Add(new SerializerTest(Serializers.Binary))
+            .Add(new SerializerTest(Serializers.Json))
             .Add(new SerializerTest(Serializers.Xml));
 
         var results = runner.RunAll();
