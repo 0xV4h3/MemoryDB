@@ -2,7 +2,7 @@
 
 namespace Engine.Serialization.Binary;
 
-internal class FieldKindClassifier
+internal static class FieldKindClassifier
 {
     public static (FieldKind Kind, Type? ElementType, Type? UnderlyingType) Classify(Type type)
     {
