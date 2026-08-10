@@ -5,12 +5,15 @@ using Test.Models;
 
 namespace Test.Tests;
 
-public abstract class SerializerTestBase : ITestCase
+public sealed class SerializerTest(string name, string extension, IStorageSerializer serializer) : ITestCase
 {
-    public abstract string Name { get; }
-    protected abstract string Extension { get; }
-    protected abstract IStorageSerializer Serializer { get; }
+    public string Name { get; } = name + "Test";
+    private string Extension { get; } = extension;
+    private IStorageSerializer Serializer { get; } = serializer;
 
+    public SerializerTest((string name, string extension, IStorageSerializer serializer) data) 
+        : this(data.name, data.extension, data.serializer) { }
+    
     public Result<TestExecutionReport> Run(TestConfig config)
     {
         var startedUtc = DateTime.UtcNow;
