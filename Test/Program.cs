@@ -10,7 +10,7 @@ class Program
         var config = TestConfig.CreateDefault();
 
         var runner = new TestRunner(config)
-            .Add(new XmlSerializerTest());
+            .Add(new SerializerTest(Serializers.Xml));
 
         var results = runner.RunAll();
 
