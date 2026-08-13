@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Engine.Serialization.Binary;
+namespace Engine.Serialization.Binary.Utils;
 
 internal static class FieldKindClassifier
 {

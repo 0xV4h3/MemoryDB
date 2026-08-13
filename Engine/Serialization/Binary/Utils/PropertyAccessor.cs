@@ -1,4 +1,4 @@
-﻿namespace Engine.Serialization.Binary;
+﻿namespace Engine.Serialization.Binary.Utils;
 
 internal sealed class PropertyAccessor
 {
