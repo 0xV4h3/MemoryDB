@@ -21,6 +21,9 @@ internal static class TypeAccessorCache
         var properties = type
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => p.CanRead && p.CanWrite && p.GetIndexParameters().Length == 0)
+            .Where(p => p.GetCustomAttribute<BinaryIgnoreAttribute>() is null)
+            .OrderBy(p => p.GetCustomAttribute<BinaryOrderAttribute>()?.Order ?? int.MaxValue)
+            .ThenBy(p => p.Name, StringComparer.Ordinal)
             .Select(BuildAccessor)
             .ToArray();
 
