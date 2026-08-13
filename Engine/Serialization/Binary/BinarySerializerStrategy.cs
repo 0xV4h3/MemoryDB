@@ -26,12 +26,12 @@ public sealed class BinarySerializerStrategy(
         return ms.ToArray();
     }
 
-    public T? Deserialize<T>(byte[] rawPayload) where T : class
+    public T? Deserialize<T>(byte[] bytes) where T : class
     {
-        ArgumentNullException.ThrowIfNull(rawPayload);
-        if (rawPayload.Length == 0) return null;
+        ArgumentNullException.ThrowIfNull(bytes);
+        if (bytes.Length == 0) return null;
 
-        using var ms = new MemoryStream(rawPayload);
+        using var ms = new MemoryStream(bytes);
         using var reader = new BinaryReader(ms);
 
         return (T?)ReadValue(reader, typeof(T));
