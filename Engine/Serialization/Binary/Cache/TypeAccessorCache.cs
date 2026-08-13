@@ -1,18 +1,21 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using System.Collections.Concurrent;
+using Engine.Serialization.Binary.Utils;
+using Engine.Serialization.Binary.Attributes;
 
-namespace Engine.Serialization.Binary;
+namespace Engine.Serialization.Binary.Cache;
 
 internal static class TypeAccessorCache
 {
-    private static readonly Dictionary<Type, TypeAccessorPlan> _cache = [];
+    private static readonly ConcurrentDictionary<Type, TypeAccessorPlan> Cache = [];
 
     public static TypeAccessorPlan GetOrBuild(Type type)
     {
-        if (_cache.TryGetValue(type, out var plan)) return plan;
+        if (Cache.TryGetValue(type, out var plan)) return plan;
 
         plan = BuildPlan(type);
-        _cache[type] = plan;
+        Cache[type] = plan;
         return plan;
     }
 
@@ -68,7 +71,7 @@ internal static class TypeAccessorCache
         return Expression.Lambda<Action<object, object?>>(assign, instanceParam, valueParam).Compile();
     }
     
-    public static int CachedTypeCount => _cache.Count;
+    public static int CachedTypeCount => Cache.Count;
 }
 
 
