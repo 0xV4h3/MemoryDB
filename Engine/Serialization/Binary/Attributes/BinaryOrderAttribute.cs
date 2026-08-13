@@ -1,7 +1,4 @@
-﻿namespace Engine.Serialization.Binary;
-
-[AttributeUsage(AttributeTargets.Property)]
-public sealed class BinaryIgnoreAttribute : Attribute;
+﻿namespace Engine.Serialization.Binary.Attributes;
 
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class BinaryOrderAttribute(int order) : Attribute
