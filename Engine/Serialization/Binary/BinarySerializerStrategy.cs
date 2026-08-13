@@ -1,10 +1,21 @@
 ﻿using System.Collections;
 using Core;
+using Engine.Serialization.Binary.Cache;
+using Engine.Serialization.Binary.Utils;
+using Engine.Serialization.Binary.Compression;
+using Engine.Serialization.Binary.Metadata;
 
 namespace Engine.Serialization.Binary;
 
-public sealed class BinarySerializerStrategy : IStorageSerializer
+public sealed class BinarySerializerStrategy(
+    ICompressionStrategy? compression = null, 
+    IIntegrityChecksum? checksum = null) : IStorageSerializer
 {
+    public const int CurrentFormatVersion = 1;
+
+    private readonly ICompressionStrategy _compression = compression ?? new NoCompression();
+    private readonly IIntegrityChecksum _checksum = checksum ?? new Crc32Checksum();
+    
     public byte[] Serialize<T>(T data) where T : class
     {
         using var ms = new MemoryStream();
