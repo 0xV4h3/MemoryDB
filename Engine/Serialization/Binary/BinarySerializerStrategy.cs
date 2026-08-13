@@ -8,12 +8,12 @@ using Engine.Serialization.Binary.Metadata;
 namespace Engine.Serialization.Binary;
 
 public sealed class BinarySerializerStrategy(
-    ICompressionStrategy? compression = null, 
+    ICompressor? compressor = null,
     IIntegrityChecksum? checksum = null) : IStorageSerializer
 {
     public const int CurrentFormatVersion = 1;
 
-    private readonly ICompressionStrategy _compression = compression ?? new NoCompression();
+    private readonly ICompressor _compressor = compressor ?? new Compressor(new NoCompression());
     private readonly IIntegrityChecksum _checksum = checksum ?? new Crc32Checksum();
     
     public byte[] Serialize<T>(T data) where T : class
