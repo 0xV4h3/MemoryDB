@@ -1,16 +1,20 @@
-﻿namespace Engine.Serialization.Binary.Metadata;
+﻿namespace Engine.Serialization.Binary.Checksum;
 
 public sealed class Crc32Checksum : IIntegrityChecksum
 {
+    public ChecksumAlgorithm Kind => ChecksumAlgorithm.Crc32;
+    
     private const uint Polynomial = 0xEDB88320;
     private static readonly uint[] Table = BuildTable();
-
-    public uint Compute(ReadOnlySpan<byte> data)
+    
+    public byte[] Compute(ReadOnlySpan<byte> data)
     {
         uint crc = 0xFFFFFFFF;
         foreach (byte b in data)
             crc = Table[(crc ^ b) & 0xFF] ^ (crc >> 8);
-        return crc ^ 0xFFFFFFFF;
+        crc ^= 0xFFFFFFFF;
+
+        return BitConverter.GetBytes(crc);
     }
 
     private static uint[] BuildTable()
