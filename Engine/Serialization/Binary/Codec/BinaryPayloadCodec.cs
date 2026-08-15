@@ -6,6 +6,7 @@ namespace Engine.Serialization.Binary.Codec;
 
 internal static class BinaryPayloadCodec
 {
+    public static void Serialize<T>(BinaryWriter writer, T data) where T : class => WriteValue(writer, data, typeof(T));
     public static byte[] Serialize<T>(T data) where T : class
     {
         using var ms = new MemoryStream();
@@ -16,6 +17,7 @@ internal static class BinaryPayloadCodec
         return ms.ToArray();
     }
 
+    public static T? Deserialize<T>(BinaryReader reader) where T : class => (T?)ReadValue(reader, typeof(T));
     public static T? Deserialize<T>(byte[] payload) where T : class
     {
         using var ms = new MemoryStream(payload);
