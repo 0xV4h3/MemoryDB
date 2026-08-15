@@ -2,18 +2,19 @@
 using Core;
 using Engine.Serialization.Binary.Codec;
 using Engine.Serialization.Binary.Compression;
+using Engine.Serialization.Binary.Checksum;
 using Engine.Serialization.Binary.Metadata;
 
 namespace Engine.Serialization.Binary;
 
 public sealed class BinarySerializerStrategy(
     ICompressor? compressor = null,
-    IIntegrityChecksum? checksum = null) : IStorageSerializer
+    IChecksumProvider? checksum = null) : IStorageSerializer
 {
     public const int CurrentFormatVersion = 1;
 
     private readonly ICompressor _compressor = compressor ?? new Compressor(new NoCompression());
-    private readonly IIntegrityChecksum _checksum = checksum ?? new Crc32Checksum();
+    private readonly IChecksumProvider _checksum = checksum ?? new ChecksumProvider(new Crc32Checksum());
     
     public byte[] Serialize<T>(T data) where T : class
     {
@@ -36,11 +37,12 @@ public sealed class BinarySerializerStrategy(
         ArgumentNullException.ThrowIfNull(destination);
 
         byte[] rawPayload = BinaryPayloadCodec.Serialize(data);
-        uint checksum = _checksum.Compute(rawPayload);
+        byte[] checksumBytes = _checksum.Compute(rawPayload);
         byte[] compressedPayload = _compressor.Compress(rawPayload);
 
         var header = new BinaryFormatHeader(
-            CurrentFormatVersion, _compressor.DefaultKind, rawPayload.Length, compressedPayload.Length, checksum);
+            CurrentFormatVersion, _compressor.DefaultKind, _checksum.DefaultKind,
+            rawPayload.Length, compressedPayload.Length, checksumBytes);
 
         using var writer = new BinaryWriter(destination, Encoding.UTF8, leaveOpen: true);
         header.WriteTo(writer);
@@ -51,7 +53,7 @@ public sealed class BinarySerializerStrategy(
     public T? Deserialize<T>(Stream source) where T : class
     {
         ArgumentNullException.ThrowIfNull(source);
-        
+
         using var reader = new BinaryReader(source, Encoding.UTF8, leaveOpen: true);
         var header = BinaryFormatHeader.ReadFrom(reader);
 
@@ -63,11 +65,8 @@ public sealed class BinarySerializerStrategy(
         byte[] compressedPayload = reader.ReadBytes(header.CompressedLength);
         byte[] rawPayload = _compressor.Decompress(header.Compression, compressedPayload, header.UncompressedLength);
 
-        uint actualChecksum = _checksum.Compute(rawPayload);
-        if (actualChecksum != header.Checksum)
-            throw new InvalidDataException("Checksum mismatch — the binary payload appears to be corrupted.");
+        _checksum.Verify(header.ChecksumAlgorithm, rawPayload, header.Checksum);
 
         return BinaryPayloadCodec.Deserialize<T>(rawPayload);
     }
-    
 }
